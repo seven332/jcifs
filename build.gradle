@@ -1,0 +1,40 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.github.seven332'
+
+repositories {
+  mavenCentral()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+// Ignore javadoc error
+allprojects { tasks.withType(Javadoc) { failOnError false } }
+
+install {
+  repositories.mavenInstaller {
+    pom.project {
+      licenses {
+        license {
+          name 'GNU Lesser General Public License, version 2.1'
+          url 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt'
+          distribution 'repo'
+        }
+      }
+    }
+  }
+}
